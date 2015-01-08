@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>flexboxLayout</title>
+	<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.js"></script>
+	<style type="text/css">
+		.flexcontainer{
+			display: flex;
+			display: -webkit-flex; /*Safari仍旧需要使用特定的浏览器前缀*/
+			flex-direction:column;   /*这是布局方向的缺省值，所以看到没有任何变化*/
+			-webkit-flex-direction: column; 
+			//width: 500px;
+		}		
+		.flexcontainer > .item{
+			width: 300px;
+			height: 100px;
+			background: blue;
+			
+			margin:5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="flexcontainer">
+		<div class="item"></div>
+		<div class="item"></div>
+		<div class="item"></div>
+		<div class="item"></div>
+		<div class="item"></div>
+	</div>
+</body>
+</html>

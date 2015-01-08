@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Slider</title>
+	<script src="http://libs.baidu.com/jquery/1.8.3/jquery.js"></script>
+	<script src="http://libs.baidu.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+	
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.css" rel="stylesheet">
+	<style type="text/css">
+		.slider {
+		  display: inline-block;
+		  vertical-align: middle;
+		  position: relative;
+		}
+		.slider.slider-horizontal {
+		  width: 210px;
+		  height: 40px;
+		}
+		.slider.slider-horizontal .slider-track {
+		  height: 10px;
+		  width: 100%;
+		  margin-top: -5px;
+		  top: 50%;
+		  left: 0;
+		}
+		.slider.slider-horizontal .slider-selection {
+		  height: 100%;
+		  top: 0;
+		  bottom: 0;
+		}
+		.slider.slider-horizontal .slider-handle {
+		  margin-left: -10px;
+		  margin-top: -5px;
+		}
+		.slider.slider-horizontal .slider-handle.triangle {
+		  border-width: 0 10px 10px 10px;
+		  width: 0;
+		  height: 0;
+		  border-bottom-color: #0480be;
+		  margin-top: 0;
+		}
+		.slider.slider-vertical {
+		  height: 210px;
+		  width: 20px;
+		}
+		.slider.slider-vertical .slider-track {
+		  width: 10px;
+		  height: 100%;
+		  margin-left: -5px;
+		  left: 50%;
+		  top: 0;
+		}
+		.slider.slider-vertical .slider-selection {
+		  width: 100%;
+		  left: 0;
+		  top: 0;
+		  bottom: 0;
+		}
+		.slider.slider-vertical .slider-handle {
+		  margin-left: -5px;
+		  margin-top: -10px;
+		}
+		.slider.slider-vertical .slider-handle.triangle {
+		  border-width: 10px 0 10px 10px;
+		  width: 1px;
+		  height: 1px;
+		  border-left-color: #0480be;
+		  margin-left: 0;
+		}
+		.slider.slider-disabled .slider-handle {
+		  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#dfdfdf), to(#bebebe));
+		  background-image: -webkit-linear-gradient(top, #dfdfdf, 0%, #bebebe, 100%);
+		  background-image: -moz-linear-gradient(top, #dfdfdf 0%, #bebebe 100%);
+		  background-image: linear-gradient(to bottom, #dfdfdf 0%, #bebebe 100%);
+		  background-repeat: repeat-x;
+		  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdfdfdf', endColorstr='#ffbebebe', GradientType=0);
+		}
+		.slider.slider-disabled .slider-track {
+		  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#e5e5e5), to(#e9e9e9));
+		  background-image: -webkit-linear-gradient(top, #e5e5e5, 0%, #e9e9e9, 100%);
+		  background-image: -moz-linear-gradient(top, #e5e5e5 0%, #e9e9e9 100%);
+		  background-image: linear-gradient(to bottom, #e5e5e5 0%, #e9e9e9 100%);
+		  background-repeat: repeat-x;
+		  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe5e5e5', endColorstr='#ffe9e9e9', GradientType=0);
+		  cursor: not-allowed;
+		}
+		.slider input {
+		  display: none;
+		}
+		.slider .tooltip-inner {
+		  white-space: nowrap;
+		}
+		.slider-track {
+		  position: absolute;
+		  cursor: pointer;
+		  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#f5f5f5), to(#f9f9f9));
+		  background-image: -webkit-linear-gradient(top, #f5f5f5, 0%, #f9f9f9, 100%);
+		  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
+		  background-image: linear-gradient(to bottom, #f5f5f5 0%, #f9f9f9 100%);
+		  background-repeat: repeat-x;
+		  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff9f9f9', GradientType=0);
+		  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+		  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+		  border-radius: 4px;
+		}
+		.slider-selection {
+		  position: absolute;
+		  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#f9f9f9), to(#f5f5f5));
+		  background-image: -webkit-linear-gradient(top, #f9f9f9, 0%, #f5f5f5, 100%);
+		  background-image: -moz-linear-gradient(top, #f9f9f9 0%, #f5f5f5 100%);
+		  background-image: linear-gradient(to bottom, #f9f9f9 0%, #f5f5f5 100%);
+		  background-repeat: repeat-x;
+		  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff9f9f9', endColorstr='#fff5f5f5', GradientType=0);
+		  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+		  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+		  -webkit-box-sizing: border-box;
+		  -moz-box-sizing: border-box;
+		  box-sizing: border-box;
+		  border-radius: 4px;
+		}
+		.slider-handle {
+		  position: absolute;
+		  width: 20px;
+		  height: 20px;
+		  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#149bdf), to(#0480be));
+		  background-image: -webkit-linear-gradient(top, #149bdf, 0%, #0480be, 100%);
+		  background-image: -moz-linear-gradient(top, #149bdf 0%, #0480be 100%);
+		  background-image: linear-gradient(to bottom, #149bdf 0%, #0480be 100%);
+		  background-repeat: repeat-x;
+		  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
+		  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+		  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+		  opacity: 0.8;
+		  border: 0px solid transparent;
+		}
+		.slider-handle.round {
+		  border-radius: 50%;
+		}
+		.slider-handle.triangle {
+		  background: transparent none;
+		}
+		
+		/*===============以上为系统定义https://github.com/seiyria/bootstrap-slider================*/  
+		#ex1Slider .slider-selection {
+			background: #BABABA;
+		}
+		
+		.slider.slider-horizontal {
+		  width: 810px !important;
+		  height: 80px;
+		}
+		
+		.slider.slider-horizontal .slider-track {
+		  height: 40px;
+		  width: 100%;
+		}
+		
+		.slider-handle{
+			width: 50px;
+		  	height: 50px;
+		}
+		
+		
+		
+	</style>
+</head>
+
+<body>
+    <br><br>
+	<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" />
+      
+     <script>
+     (function( $ ) {
+
+    		var ErrorMsgs = {
+    			formatInvalidInputErrorMsg : function(input) {
+    				return "Invalid input value '" + input + "' passed in";
+    			},
+    			callingContextNotSliderInstance : "Calling context element does not have instance of Slider bound to it. Check your code to make sure the JQuery object returned from the call to the slider() initializer is calling the method"
+    		};
+
+    		var Slider = function(element, options) {
+    			var el = this.element = $(element).hide();
+    			var origWidth = el.outerWidth();
+
+    			var updateSlider = false;
+    			var parent = this.element.parent();
+
+
+    			if (parent.hasClass('slider') === true) {
+    				updateSlider = true;
+    				this.picker = parent;
+    			} else {
+    				this.picker = $('<div class="slider">'+
+    									'<div class="slider-track">'+
+    										'<div class="slider-selection"></div>'+
+    										'<div class="slider-handle"></div>'+
+    										'<div class="slider-handle"></div>'+
+    									'</div>'+
+    									'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'+
+    								'</div>')
+    									.insertBefore(this.element)
+    									.append(this.element);
+    			}
+
+    			this.id = this.element.data('slider-id')||options.id;
+    			if (this.id) {
+    				this.picker[0].id = this.id;
+    			}
+
+    			if (typeof Modernizr !== 'undefined' && Modernizr.touch) {
+    				this.touchCapable = true;
+    			}
+
+    			var tooltip = this.element.data('slider-tooltip')||options.tooltip;
+
+    			this.tooltip = this.picker.find('.tooltip');
+    			this.tooltipInner = this.tooltip.find('div.tooltip-inner');
+
+    			this.orientation = this.element.data('slider-orientation')||options.orientation;
+    			switch(this.orientation) {
+    				case 'vertical':
+    					this.picker.addClass('slider-vertical');
+    					this.stylePos = 'top';
+    					this.mousePos = 'pageY';
+    					this.sizePos = 'offsetHeight';
+    					this.tooltip.addClass('right')[0].style.left = '100%';
+    					break;
+    				default:
+    					this.picker
+    						.addClass('slider-horizontal')
+    						.css('width', origWidth);
+    					this.orientation = 'horizontal';
+    					this.stylePos = 'left';
+    					this.mousePos = 'pageX';
+    					this.sizePos = 'offsetWidth';
+    					this.tooltip.addClass('top')[0].style.top = -this.tooltip.outerHeight() - 14 + 'px';
+    					break;
+    			}
+
+    			['min', 'max', 'step', 'value'].forEach(function(attr) {
+    				if (typeof el.data('slider-' + attr) !== 'undefined') {
+    					this[attr] = el.data('slider-' + attr);
+    				} else if (typeof options[attr] !== 'undefined') {
+    					this[attr] = options[attr];
+    				} else if (typeof el.prop(attr) !== 'undefined') {
+    					this[attr] = el.prop(attr);
+    				} else {
+    					this[attr] = 0; // to prevent empty string issues in calculations in IE
+    				}
+    			}, this);
+
+    			if (this.value instanceof Array) {
+    				this.range = true;
+    			}
+
+    			this.selection = this.element.data('slider-selection')||options.selection;
+    			this.selectionEl = this.picker.find('.slider-selection');
+    			if (this.selection === 'none') {
+    				this.selectionEl.addClass('hide');
+    			}
+
+    			this.selectionElStyle = this.selectionEl[0].style;
+
+    			this.handle1 = this.picker.find('.slider-handle:first');
+    			this.handle1Stype = this.handle1[0].style;
+    			this.handle2 = this.picker.find('.slider-handle:last');
+    			this.handle2Stype = this.handle2[0].style;
+
+    			var handle = this.element.data('slider-handle')||options.handle;
+    			switch(handle) {
+    				case 'round':
+    					this.handle1.addClass('round');
+    					this.handle2.addClass('round');
+    					break;
+    				case 'triangle':
+    					this.handle1.addClass('triangle');
+    					this.handle2.addClass('triangle');
+    					break;
+    			}
+
+    			if (this.range) {
+    				this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
+    				this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
+    			} else {
+    				this.value = [ Math.max(this.min, Math.min(this.max, this.value))];
+    				this.handle2.addClass('hide');
+    				if (this.selection === 'after') {
+    					this.value[1] = this.max;
+    				} else {
+    					this.value[1] = this.min;
+    				}
+    			}
+    			this.diff = this.max - this.min;
+    			this.percentage = [
+    				(this.value[0]-this.min)*100/this.diff,
+    				(this.value[1]-this.min)*100/this.diff,
+    				this.step*100/this.diff
+    			];
+
+    			this.offset = this.picker.offset();
+    			this.size = this.picker[0][this.sizePos];
+
+    			this.formater = options.formater;
+
+    			this.reversed = this.element.data('slider-reversed')||options.reversed;
+
+    			this.layout();
+
+    			if (this.touchCapable) {
+    				// Touch: Bind touch events:
+    				this.picker.on({
+    					touchstart: $.proxy(this.mousedown, this)
+    				});
+    			} else {
+    				this.picker.on({
+    					mousedown: $.proxy(this.mousedown, this)
+    				});
+    			}
+
+    			if(tooltip === 'hide') {
+    				this.tooltip.addClass('hide');
+    			} else if(tooltip === 'always') {
+    				this.showTooltip();
+    				this.alwaysShowTooltip = true;
+    			} else {
+    				this.picker.on({
+    					mouseenter: $.proxy(this.showTooltip, this),
+    					mouseleave: $.proxy(this.hideTooltip, this)
+    				});
+    			}
+
+    			if (updateSlider === true) {
+    				var old = this.getValue();
+    				var val = this.calculateValue();
+    				this.element
+    					.trigger({
+    						'type': 'slide',
+    						'value': val
+    					})
+    					.data('value', val)
+    					.prop('value', val);
+
+    				if (old !== val) {
+    					this.element
+    						.trigger({
+    							'type': 'slideChange',
+    							'new': val, // without a string literal, IE8 will interpret as the JS "new" keyword
+    							'old': old
+    						})
+    						.data('value', val)
+    						.prop('value', val);
+    				}
+    			}
+
+    			this.enabled = options.enabled && 
+    							(this.element.data('slider-enabled') === undefined || this.element.data('slider-enabled') === true);
+    			if(!this.enabled)
+    			{
+    				this.disable();
+    			}
+    		};
+
+    		Slider.prototype = {
+    			constructor: Slider,
+
+    			over: false,
+    			inDrag: false,
+    			
+    			showTooltip: function(){
+    				this.tooltip.addClass('in');
+    				this.over = true;
+    			},
+    			
+    			hideTooltip: function(){
+    				if (this.inDrag === false && this.alwaysShowTooltip !== true) {
+    					this.tooltip.removeClass('in');
+    				}
+    				this.over = false;
+    			},
+
+    			layout: function(){
+    				var positionPercentages;
+
+    				if(this.reversed) {
+    					positionPercentages = [ 100 - this.percentage[0], this.percentage[1] ];
+    				} else {
+    					positionPercentages = [ this.percentage[0], this.percentage[1] ];
+    				}
+
+    				this.handle1Stype[this.stylePos] = positionPercentages[0]+'%';
+    				this.handle2Stype[this.stylePos] = positionPercentages[1]+'%';
+
+    				if (this.orientation === 'vertical') {
+    					this.selectionElStyle.top = Math.min(positionPercentages[0], positionPercentages[1]) +'%';
+    					this.selectionElStyle.height = Math.abs(positionPercentages[0] - positionPercentages[1]) +'%';
+    				} else {
+    					this.selectionElStyle.left = Math.min(positionPercentages[0], positionPercentages[1]) +'%';
+    					this.selectionElStyle.width = Math.abs(positionPercentages[0] - positionPercentages[1]) +'%';
+    				}
+
+    				if (this.range) {
+    					this.tooltipInner.text(
+    						this.formater(this.value[0]) + ' : ' + this.formater(this.value[1])
+    					);
+    					this.tooltip[0].style[this.stylePos] = this.size * (positionPercentages[0] + (positionPercentages[1] - positionPercentages[0])/2)/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
+    				} else {
+    					this.tooltipInner.text(
+    						this.formater(this.value[0])
+    					);
+    					this.tooltip[0].style[this.stylePos] = this.size * positionPercentages[0]/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
+    				}
+    			},
+
+    			mousedown: function(ev) {
+    				if(!this.isEnabled()) {
+    					return false;
+    				}
+    				// Touch: Get the original event:
+    				if (this.touchCapable && ev.type === 'touchstart') {
+    					ev = ev.originalEvent;
+    				}
+
+    				this.offset = this.picker.offset();
+    				this.size = this.picker[0][this.sizePos];
+
+    				var percentage = this.getPercentage(ev);
+
+    				if (this.range) {
+    					var diff1 = Math.abs(this.percentage[0] - percentage);
+    					var diff2 = Math.abs(this.percentage[1] - percentage);
+    					this.dragged = (diff1 < diff2) ? 0 : 1;
+    				} else {
+    					this.dragged = 0;
+    				}
+
+    				this.percentage[this.dragged] = this.reversed ? 100 - percentage : percentage;
+    				this.layout();
+
+    				if (this.touchCapable) {
+    					// Touch: Bind touch events:
+    					$(document).on({
+    						touchmove: $.proxy(this.mousemove, this),
+    						touchend: $.proxy(this.mouseup, this)
+    					});
+    				} else {
+    					$(document).on({
+    						mousemove: $.proxy(this.mousemove, this),
+    						mouseup: $.proxy(this.mouseup, this)
+    					});
+    				}
+
+    				this.inDrag = true;
+    				var val = this.calculateValue();
+    				this.setValue(val);
+    				this.element.trigger({
+    						type: 'slideStart',
+    						value: val
+    					}).trigger({
+    						type: 'slide',
+    						value: val
+    					});
+    				return false;
+    			},
+
+    			mousemove: function(ev) {
+    				if(!this.isEnabled()) {
+    					return false;
+    				}
+    				// Touch: Get the original event:
+    				if (this.touchCapable && ev.type === 'touchmove') {
+    					ev = ev.originalEvent;
+    				}
+
+    				var percentage = this.getPercentage(ev);
+    				if (this.range) {
+    					if (this.dragged === 0 && this.percentage[1] < percentage) {
+    						this.percentage[0] = this.percentage[1];
+    						this.dragged = 1;
+    					} else if (this.dragged === 1 && this.percentage[0] > percentage) {
+    						this.percentage[1] = this.percentage[0];
+    						this.dragged = 0;
+    					}
+    				}
+    				this.percentage[this.dragged] = this.reversed ? 100 - percentage : percentage;
+    				this.layout();
+    				var val = this.calculateValue();
+    				this.setValue(val);
+    				this.element
+    					.trigger({
+    						type: 'slide',
+    						value: val
+    					})
+    					.data('value', val)
+    					.prop('value', val);
+    				return false;
+    			},
+
+    			mouseup: function() {
+    				if(!this.isEnabled()) {
+    					return false;
+    				}
+    				if (this.touchCapable) {
+    					// Touch: Bind touch events:
+    					$(document).off({
+    						touchmove: this.mousemove,
+    						touchend: this.mouseup
+    					});
+    				} else {
+    					$(document).off({
+    						mousemove: this.mousemove,
+    						mouseup: this.mouseup
+    					});
+    				}
+
+    				this.inDrag = false;
+    				if (this.over === false) {
+    					this.hideTooltip();
+    				}
+    				var val = this.calculateValue();
+    				this.layout();
+    				this.element
+    					.data('value', val)
+    					.prop('value', val)
+    					.trigger({
+    						type: 'slideStop',
+    						value: val
+    					});
+    				return false;
+    			},
+
+    			calculateValue: function() {
+    				var val;
+    				if (this.range) {
+    					val = [
+    						(Math.max(this.min, this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step)),
+    						(Math.min(this.max, this.min + Math.round((this.diff * this.percentage[1]/100)/this.step)*this.step))
+    					];
+    					this.value = val;
+    				} else {
+    					val = (this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step);
+    					if (val < this.min) {
+    						val = this.min;
+    					}
+    					else if (val > this.max) {
+    						val = this.max;
+    					}
+    					val = parseFloat(val);
+    					this.value = [val, this.value[1]];
+    				}
+    				return val;
+    			},
+
+    			getPercentage: function(ev) {
+    				if (this.touchCapable) {
+    					ev = ev.touches[0];
+    				}
+    				var percentage = (ev[this.mousePos] - this.offset[this.stylePos])*100/this.size;
+    				percentage = Math.round(percentage/this.percentage[2])*this.percentage[2];
+    				return Math.max(0, Math.min(100, percentage));
+    			},
+
+    			getValue: function() {
+    				if (this.range) {
+    					return this.value;
+    				}
+    				return this.value[0];
+    			},
+
+    			setValue: function(val) {
+    				this.value = this.validateInputValue(val);
+
+    				if (this.range) {
+    					this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
+    					this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
+    				} else {
+    					this.value = [ Math.max(this.min, Math.min(this.max, this.value))];
+    					this.handle2.addClass('hide');
+    					if (this.selection === 'after') {
+    						this.value[1] = this.max;
+    					} else {
+    						this.value[1] = this.min;
+    					}
+    				}
+    				this.diff = this.max - this.min;
+    				this.percentage = [
+    					(this.value[0]-this.min)*100/this.diff,
+    					(this.value[1]-this.min)*100/this.diff,
+    					this.step*100/this.diff
+    				];
+    				this.layout();
+    			},
+
+    			validateInputValue : function(val) {
+    				if(typeof val === 'number') {
+    					return val;
+    				} else if(val instanceof Array) {
+    					val.forEach(function(input) { if (typeof input !== 'number') { throw new Error( ErrorMsgs.formatInvalidInputErrorMsg(input) ); }});
+    					return val;
+    				} else {
+    					throw new Error( ErrorMsgs.formatInvalidInputErrorMsg(val) );
+    				}
+    			},
+
+    			destroy: function(){
+    				this.element.show().insertBefore(this.picker);
+    				this.picker.remove();
+    				$(this.element).removeData('slider');
+    				$(this.element).off();
+    			},
+
+    			disable: function() {
+    				this.enabled = false;
+    				this.picker.addClass('slider-disabled');
+    				this.element.trigger('slideDisabled');
+    			},
+
+    			enable: function() {
+    				this.enabled = true;
+    				this.picker.removeClass('slider-disabled');
+    				this.element.trigger('slideEnabled');
+    			},
+
+    			toggle: function() {
+    				if(this.enabled) {
+    					this.disable();
+    				} else {
+    					this.enable();
+    				}
+    			},
+
+    			isEnabled: function() {
+    				return this.enabled;
+    			}
+    		};
+
+    		var publicMethods = {
+    			getValue : Slider.prototype.getValue,
+    			setValue : Slider.prototype.setValue,
+    			destroy : Slider.prototype.destroy,
+    			disable : Slider.prototype.disable,
+    			enable : Slider.prototype.enable,
+    			toggle : Slider.prototype.toggle,
+    			isEnabled: Slider.prototype.isEnabled
+    		};
+
+    		$.fn.slider = function (option) {
+    			if (typeof option === 'string') {
+    				var args = Array.prototype.slice.call(arguments, 1);
+    				return invokePublicMethod.call(this, option, args);
+    			} else {
+    				return createNewSliderInstance.call(this, option);
+    			}
+    		};
+
+    		function invokePublicMethod(methodName, args) {
+    			if(publicMethods[methodName]) {
+    				var sliderObject = retrieveSliderObjectFromElement(this);
+    				return publicMethods[methodName].apply(sliderObject, args);
+    			} else {
+    				throw new Error("method '" + methodName + "()' does not exist for slider.");
+    			}
+    		}
+
+    		function retrieveSliderObjectFromElement(element) {
+    			var sliderObject = $(element).data('slider');
+    			if(sliderObject && sliderObject instanceof Slider) {
+    				return sliderObject;
+    			} else {
+    				throw new Error(ErrorMsgs.callingContextNotSliderInstance);
+    			}
+    		}
+
+    		function createNewSliderInstance(opts) {
+    			var $this = $(this),
+    				data = $this.data('slider'),
+    				options = typeof opts === 'object' && opts;
+    			if (!data)  {
+    				$this.data('slider', (data = new Slider(this, $.extend({}, $.fn.slider.defaults,options))));
+    			}
+    			return $this;
+    		}
+
+    		$.fn.slider.defaults = {
+    			min: 0,
+    			max: 10,
+    			step: 1,
+    			orientation: 'horizontal',
+    			value: 5,
+    			selection: 'before',
+    			tooltip: 'show',
+    			handle: 'round',
+    			reversed : false,
+    			enabled: true,
+    			formater: function(value) {
+    				return value;
+    			}
+    		};
+
+    		$.fn.slider.Constructor = Slider;
+
+    	})( window.jQuery );
+
+	//===================================以上为系统定义
+
+    
+     var sl= $('#ex1').slider({    	  	    	  	
+    	  	formater: function(value){
+    			return 'Current Value :' + value;
+    		}
+    });
+    
+	
+    	
+     </script>
+</body>
+</html>

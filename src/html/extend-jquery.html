@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.js"></script>
+</head>
+<body>
+	<input id='test'><h1 onclick="window.location='?a=b;fdsr'">ds</h1>
+	<audio src="Still Here(王菲《我愿意》翻唱版).mp3" autoplay="autoplay" controls="controls"></audio>
+	<video src="http://htmlref.com/ch2/html_5.mp4" autoplay="autoplay" controls="controls"></video> 
+	<script>
+		$.fn.extend({
+			alertWhileClick:function(){
+				$(this).on('input',function(){alert($(this).val())})
+				$(this).on('propertychange',function(){alert($(this).val())})
+			}
+		});
+		
+		$.extend({ 
+			　add:function(a,b){return a+b;} 
+		}); 
+		
+		$('#test').alertWhileClick();	
+		//alert($.add(5,6));
+	</script>
+</body>
+</html>
